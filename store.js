@@ -1,6 +1,6 @@
-const storage = require('azure-storage');
-const service = storage.createTableService();
-const table = 'tasks';
+const storage = require('azure-storage')
+const service = storage.createTableService()
+const table = 'tasks'
 
 const init = async () => (
     new Promise((resolve, reject) => {
@@ -8,8 +8,8 @@ const init = async () => (
             !error ? resolve() : reject()
         })
     })
-);
+)
 
 module.exports = {
     init
-};
+}
