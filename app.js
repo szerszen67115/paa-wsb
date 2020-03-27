@@ -41,5 +41,5 @@ app.on('error', (err, ctx) => {
     console.error('server error', err, ctx)
 })
 
+require('./store').init()
 module.exports = app
-// require('./store').init()
