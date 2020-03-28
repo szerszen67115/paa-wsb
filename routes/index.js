@@ -4,24 +4,16 @@ const moment = require("moment")
 
 router.get('/', async (ctx, next) => {
   tasks = await store.listTasks()
+  tasks.sort(function (a, b) {
+    return a.modyficationDate - b.modyficationDate
+  })
+
   for (var i = 0; i < tasks.length; i++) {
     if (tasks[i].description == null) {
       tasks[i].description = "brak opisu"
     }
-    if (tasks[i].modyficationDate == null) {
-      tasks[i].modyficationDate = "brak daty"
-    }
+    tasks[i].modyficationDate = moment(tasks[i].modyficationDate).format('MMMM Do YYYY, h:mm:ss a');
   }
-
-  tasks.sort(function (a, b) {
-    if (moment(a.modyficationDate).isSame(b.modyficationDate)) {
-      return 0;
-    }
-    if(moment(a.modyficationDate).isBefore(b.modyficationDate)) {
-      return 1;
-    }
-    return -1;
-  })
 
   console.log(tasks);
   await ctx.render('index', { tasks })
