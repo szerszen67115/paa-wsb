@@ -3,6 +3,7 @@ const router = require('koa-router')()
 
 router.get('/', async (ctx, next) => {
   tasks = await store.listTasks()
+  console.log(tasks);
   await ctx.render('index', { tasks })
 })
 
