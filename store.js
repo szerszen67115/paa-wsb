@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const storage = require('azure-storage')
 const uuid = require('uuid')
 var retryOperations = new storage.ExponentialRetryPolicyFilter(1);
