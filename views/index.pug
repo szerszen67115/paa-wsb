@@ -17,10 +17,9 @@ block content
     table
       tr
         th(scope= "col") Tytuł
-          each task in tasks
+        th(scope= "col") Opis
+      tr
+        each task in tasks
             tr
               td= task.title
-        th(scope= "col") Opis
-          each task in tasks
-            tr
               td= task.description
