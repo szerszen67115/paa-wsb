@@ -19,9 +19,16 @@ block content
         th(scope= "col") Tytuł
         th(scope= "col") Opis
         th(scope= "col") Ostatnia data modyfikacji
+        th(scope= "col") Status
+        th(scope= "col") Akcje
       tr
         each task in tasks
             tr
               td= task.title
               td= task.description
               td= task.modyficationDate
+              td= (task.status == 'completed' ? 'Zakończone' : 'Otwarte')
+              td
+                button(type="button" onclick=`updateTaskStatus('${task.id}', 'completed')`) ✓
+block scripts
+  script(src="javascripts/index.js")

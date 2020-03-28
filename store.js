@@ -15,6 +15,21 @@ function LoggingFilter() {
     }
 }
 
+const updateTaskStatus = async (id, status) => (
+    new Promise((resolve, reject) => {
+        const generator = storage.TableUtilities.entityGenerator
+        const task = {
+            PartitionKey: generator.String('task'),
+            RowKey: generator.String(id),
+            status
+        }
+
+        service.mergeEntity(table, task, (error, result, response) => {
+            !error ? resolve() : reject()
+        })
+    })
+)
+
 const createTask = async (title, description) => (
     new Promise((resolve, reject) => {
         const generator = storage.TableUtilities.entityGenerator
@@ -24,7 +39,8 @@ const createTask = async (title, description) => (
             RowKey: generator.String(uuid.v4()),
             title: title,
             description: description,
-            modyficationDate: modyficationDate
+            modyficationDate: modyficationDate,
+            status: 'open'
         }
 
         service.insertEntity(table, task, (error, result, response) => {
@@ -36,14 +52,16 @@ const createTask = async (title, description) => (
 const listTasks = async () => (
     new Promise((resolve, reject) => {
         const query = new storage.TableQuery()
-            .select(['title', "description", "modyficationDate"])
+            .select(['RowKey','title', "description", "modyficationDate", 'status'])
             .where('PartitionKey eq ?', 'task')
 
         service.queryEntities(table, query, null, (error, result, response) => {
             !error ? resolve(result.entries.map((entry) => ({
+                id: entry.RowKey._,
                 title: entry.title._,
                 description: entry.description._,
-                modyficationDate: entry.modyficationDate._
+                modyficationDate: entry.modyficationDate._,
+                status: entry.status._
             }))) : reject()
         })
     })
@@ -60,5 +78,6 @@ const init = async () => (
 module.exports = {
     init,
     createTask,
-    listTasks
+    listTasks,
+    updateTaskStatus
 }
