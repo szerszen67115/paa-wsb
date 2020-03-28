@@ -20,3 +20,8 @@ block content
       each task in tasks
         tr
           td= task.title
+      tr
+        th(scope= "col") Opis
+      each task in tasks
+        tr
+          td= task.description

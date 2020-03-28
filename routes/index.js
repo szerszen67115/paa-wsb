@@ -3,6 +3,12 @@ const router = require('koa-router')()
 
 router.get('/', async (ctx, next) => {
   tasks = await store.listTasks()
+  for (var i = 0; i < tasks.length; i++) {
+    if (tasks[i].description == null) {
+      tasks[i].description = "brak opisu"
+    }
+  }
+
   console.log(tasks);
   await ctx.render('index', { tasks })
 })
