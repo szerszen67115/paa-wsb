@@ -20,8 +20,8 @@ const createTask = async (title, description) => (
         const task = {
             PartitionKey: generator.String('task'),
             RowKey: generator.String(uuid.v4()),
-            Title: title,
-            Description: description
+            title: title,
+            description: description
         }
 
         service.insertEntity(table, task, (error, result, response) => {
