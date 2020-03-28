@@ -48,7 +48,7 @@ const deleteTask = async (id) => {
 const createTask = async (title, description) => (
     new Promise((resolve, reject) => {
         const generator = storage.TableUtilities.entityGenerator
-        const modyficationDate = moment().format("MMM Do YYYY");
+        const modyficationDate = moment().format('MMMM Do YYYY, h:mm:ss a')
         const task = {
             PartitionKey: generator.String('task'),
             RowKey: generator.String(uuid.v4()),
