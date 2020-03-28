@@ -12,6 +12,10 @@ router.get('/', async (ctx, next) => {
     }
   }
 
+  tasks.sort(function (a, b) {
+    return moment(a.modyficationDate).isBefore(b.modyficationDate)
+  })
+
   console.log(tasks);
   await ctx.render('index', { tasks })
 })
