@@ -1,7 +1,7 @@
 const storage = require('azure-storage')
 const uuid = require('uuid')
 var retryOperations = new storage.ExponentialRetryPolicyFilter(1);
-const service = storage.createTableService().withFilter(retryOperations).withFilter(LoggingFilter)
+const service = storage.createTableService() //.withFilter(retryOperations).withFilter(LoggingFilter)
 const table = 'tasks'
 
 function LoggingFilter() {
