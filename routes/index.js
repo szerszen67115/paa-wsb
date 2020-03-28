@@ -8,7 +8,7 @@ router.get('/', async (ctx, next) => {
 
 router.get('/error', async (ctx, next) => {
   await ctx.render('error', {
-    errorMessage: 'Tytuł nie może być pusty.'
+    messages: 'Tytuł nie może być pusty.'
   })
 })
 
