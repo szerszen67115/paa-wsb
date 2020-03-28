@@ -6,6 +6,12 @@ router.get('/', async (ctx, next) => {
   })
 })
 
+router.get('/error', async (ctx, next) => {
+  await ctx.render('error', {
+    errorMessage: 'Tytuł nie może być pusty.'
+  })
+})
+
 router.get('/string', async (ctx, next) => {
   ctx.body = 'koa2 string'
 })
