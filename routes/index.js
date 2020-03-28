@@ -14,7 +14,13 @@ router.get('/', async (ctx, next) => {
   }
 
   tasks.sort(function (a, b) {
-    return moment(a.modyficationDate).isBefore(b.modyficationDate)
+    if (moment(a.modyficationDate).isSame(b.modyficationDate)) {
+      return 0;
+    }
+    if(moment(a.modyficationDate).isBefore(b.modyficationDate)) {
+      return 1;
+    }
+    return -1;
   })
 
   console.log(tasks);

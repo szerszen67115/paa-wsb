@@ -18,7 +18,7 @@ function LoggingFilter() {
 const updateTaskStatus = async (id, status) => (
     new Promise((resolve, reject) => {
         const generator = storage.TableUtilities.entityGenerator
-        const modyficationDate = moment().format("MMM Do YYYY");
+        const modyficationDate = moment().format('MMMM Do YYYY, h:mm:ss a')
         const task = {
             PartitionKey: generator.String('task'),
             RowKey: generator.String(id),
