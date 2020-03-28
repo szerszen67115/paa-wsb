@@ -14,13 +14,14 @@ function LoggingFilter() {
     }
 }
 
-const createTask = async (title) => (
+const createTask = async (title, description) => (
     new Promise((resolve, reject) => {
         const generator = storage.TableUtilities.entityGenerator
         const task = {
             PartitionKey: generator.String('task'),
             RowKey: generator.String(uuid.v4()),
-            Title: title
+            Title: title,
+            Description: description
         }
 
         service.insertEntity(table, task, (error, result, response) => {
