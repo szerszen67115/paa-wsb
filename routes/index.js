@@ -7,6 +7,9 @@ router.get('/', async (ctx, next) => {
     if (tasks[i].description == null) {
       tasks[i].description = "brak opisu"
     }
+    if (tasks[i].modyficationDate == null) {
+      tasks[i].modyficationDate = "brak daty"
+    }
   }
 
   console.log(tasks);
