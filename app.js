@@ -13,8 +13,6 @@ const users = require('./routes/users')
 // error handler
 onerror(app)
 
-app.use(tasks.routes(), tasks.allowedMethods())
-
 // middlewares
 app.use(bodyparser({
     enableTypes: ['json', 'form', 'text']
@@ -38,6 +36,7 @@ app.use(async (ctx, next) => {
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
+app.use(tasks.routes(), tasks.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
