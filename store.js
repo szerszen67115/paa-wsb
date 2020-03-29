@@ -1,19 +1,26 @@
 const moment = require("moment")
 const storage = require('azure-storage')
 const uuid = require('uuid')
-var retryOperations = new storage.ExponentialRetryPolicyFilter(1);
-const service = storage.createTableService() //.withFilter(retryOperations).withFilter(LoggingFilter)
 const table = 'tasks'
 
 function LoggingFilter() {
     this.handle = (requestOptions, next) => {
         console.log("Request: " + JSON.stringify(requestOptions, null, 1))
-        next(requestOptions, (returnObject, finalCallback, next) => {
-            console.log("Response: " + JSON.stringify(returnObject, null, 1))
-            finalCallback()
-        })
+        if (next) {
+            next(requestOptions, (returnObject, finalCallback, nextPostCallback) => {
+                console.log("Response: " + JSON.stringify(returnObject, null, 1))
+                if (nextPostCallback) {
+                    nextPostCallback(returnObject)
+                } else {
+                    finalCallback(returnObject)
+                }
+            })
+        }
     }
 }
+
+var retryOperations = new storage.ExponentialRetryPolicyFilter(1);
+const service = storage.createTableService().withFilter(retryOperations).withFilter(LoggingFilter)
 
 const updateTaskStatus = async (id, status) => (
     new Promise((resolve, reject) => {
@@ -28,7 +35,7 @@ const updateTaskStatus = async (id, status) => (
 
         service.mergeEntity(table, task, (error, result, response) => {
             !error ? resolve() : reject()
-        })
+        }).withFilter(LoggingFilter)
     })
 )
 
@@ -41,7 +48,7 @@ const deleteTask = async (id) => {
         }
         service.deleteEntity(table, task, (error, result, response) => {
             !error ? resolve() : reject()
-        })
+        }).withFilter(LoggingFilter)
     })
 }
 
@@ -60,7 +67,7 @@ const createTask = async (title, description) => (
 
         service.insertEntity(table, task, (error, result, response) => {
             !error ? resolve() : reject()
-        })
+        }).withFilter(LoggingFilter)
     })
 )
 
@@ -78,7 +85,7 @@ const listTasks = async () => (
                 modyficationDate: entry.modyficationDate._,
                 status: entry.status._
             }))) : reject()
-        })
+        }).withFilter(LoggingFilter)
     })
 )
 
