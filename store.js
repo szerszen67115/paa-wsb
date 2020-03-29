@@ -4,7 +4,7 @@ const uuid = require('uuid')
 const table = 'tasks'
 
 function LoggingFilter() {
-    this.handle = (requestOptions, next) => {
+    this.handle = function  (requestOptions, next) {
         console.log("Request: " + JSON.stringify(requestOptions, null, 1))
         if (next) {
             next(requestOptions, (returnObject, finalCallback, nextPostCallback) => {
