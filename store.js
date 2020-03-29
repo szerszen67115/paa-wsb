@@ -85,7 +85,7 @@ const listTasks = async () => (
                 modyficationDate: entry.modyficationDate._,
                 status: entry.status._
             }))) : reject()
-        }).withFilter(LoggingFilter)
+        })
     })
 )
 
