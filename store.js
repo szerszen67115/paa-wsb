@@ -4,7 +4,7 @@ const uuid = require('uuid')
 const table = 'tasks'
 
 function LoggingFilter() {
-    this.handle = function  (requestOptions, next) {
+    this.handle = (requestOptions, next) => {
         console.log("Request: " + JSON.stringify(requestOptions, null, 1))
         if (next) {
             next(requestOptions, (returnObject, finalCallback, nextPostCallback) => {
@@ -19,9 +19,9 @@ function LoggingFilter() {
     }
 }
 
-var retryOperations = new storage.ExponentialRetryPolicyFilter(1);
-const service = storage.createTableService().withFilter(LoggingFilter).withFilter(retryOperations)
-const serviceWithoutLogging = storage.createTableService()
+const retryOperations = new storage.ExponentialRetryPolicyFilter(1);
+const logOperations = new LoggingFilter()
+const loggingService = storage.createTableService().withFilter(logOperations).withFilter(retryOperations)
 
 const updateTaskStatus = async (id, status) => (
     new Promise((resolve, reject) => {
@@ -34,7 +34,7 @@ const updateTaskStatus = async (id, status) => (
             status
         }
 
-        service.mergeEntity(table, task, (error, result, response) => {
+        loggingService.mergeEntity(table, task, (error, result, response) => {
             !error ? resolve() : reject()
         })
     })
@@ -47,7 +47,7 @@ const deleteTask = async (id) => {
             PartitionKey: generator.String('task'),
             RowKey: generator.String(id)
         }
-        service.deleteEntity(table, task, (error, result, response) => {
+        loggingService.deleteEntity(table, task, (error, result, response) => {
             !error ? resolve() : reject()
         })
     })
@@ -66,7 +66,7 @@ const createTask = async (title, description) => (
             status: 'open'
         }
 
-        service.insertEntity(table, task, (error, result, response) => {
+        loggingService.insertEntity(table, task, (error, result, response) => {
             !error ? resolve() : reject()
         })
     })
@@ -78,7 +78,7 @@ const listTasks = async () => (
             .select(['RowKey','title', "description", "modyficationDate", 'status'])
             .where('PartitionKey eq ?', 'task')
 
-        serviceWithoutLogging.queryEntities(table, query, null, (error, result, response) => {
+        loggingService.queryEntities(table, query, null, (error, result, response) => {
             !error ? resolve(result.entries.map((entry) => ({
                 id: entry.RowKey._,
                 title: entry.title._,
@@ -92,7 +92,7 @@ const listTasks = async () => (
 
 const init = async () => (
     new Promise((resolve, reject) => {
-        service.createTableIfNotExists(table, (error, result, response) => {
+        loggingService.createTableIfNotExists(table, (error, result, response) => {
             !error ? resolve() : reject()
         })
     })
