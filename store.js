@@ -36,7 +36,7 @@ const updateTaskStatus = async (id, status) => (
 
         service.mergeEntity(table, task, (error, result, response) => {
             !error ? resolve() : reject()
-        }).withFilter(LoggingFilter)
+        })
     })
 )
 
@@ -49,7 +49,7 @@ const deleteTask = async (id) => {
         }
         service.deleteEntity(table, task, (error, result, response) => {
             !error ? resolve() : reject()
-        }).withFilter(LoggingFilter)
+        })
     })
 }
 
@@ -68,7 +68,7 @@ const createTask = async (title, description) => (
 
         service.insertEntity(table, task, (error, result, response) => {
             !error ? resolve() : reject()
-        }).withFilter(LoggingFilter)
+        })
     })
 )
 
