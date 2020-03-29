@@ -20,7 +20,8 @@ function LoggingFilter() {
 }
 
 var retryOperations = new storage.ExponentialRetryPolicyFilter(1);
-const service = storage.createTableService().withFilter(retryOperations).withFilter(LoggingFilter)
+const service = storage.createTableService().withFilter(LoggingFilter).withFilter(retryOperations)
+const serviceWithoutLogging = storage.createTableService()
 
 const updateTaskStatus = async (id, status) => (
     new Promise((resolve, reject) => {
@@ -77,7 +78,7 @@ const listTasks = async () => (
             .select(['RowKey','title', "description", "modyficationDate", 'status'])
             .where('PartitionKey eq ?', 'task')
 
-        service.queryEntities(table, query, null, (error, result, response) => {
+        serviceWithoutLogging.queryEntities(table, query, null, (error, result, response) => {
             !error ? resolve(result.entries.map((entry) => ({
                 id: entry.RowKey._,
                 title: entry.title._,
